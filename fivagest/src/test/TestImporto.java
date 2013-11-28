@@ -1,8 +1,10 @@
-package fivagest;
+package test;
 
 import static org.junit.Assert.*;
-
 import org.junit.Test;
+import business.Aliquota;
+import business.Euro;
+import business.Importo;
 
 public class TestImporto {
 

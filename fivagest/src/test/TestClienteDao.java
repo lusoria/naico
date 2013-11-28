@@ -1,4 +1,6 @@
-package fivagest;
+package test;
+
+import business.Cliente;
 
 public class TestClienteDao {
 

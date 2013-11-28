@@ -1,10 +1,16 @@
-package fivagest;
+package dao;
 
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
+
+import business.Aliquota;
+import business.Cliente;
+import business.Euro;
+import business.Importo;
+import business.Pratica;
 
 public class PraticaDao {
 

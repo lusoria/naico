@@ -1,4 +1,4 @@
-package fivagest;
+package dao;
 
 import java.sql.*;
  
@@ -31,6 +31,9 @@ public class DataBaseHelper {
     	return conn;
     }
    
+    
+    public static 
+    
     
     public static void manageError(SQLException erroreSQL, String query) {
 

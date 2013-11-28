@@ -1,10 +1,11 @@
-package fivagest;
+package test;
+
 
 import static org.junit.Assert.assertEquals;
-
 import java.math.BigDecimal;
-
 import org.junit.Test;
+import business.Euro;
+
 
 public class TestSerio {
 

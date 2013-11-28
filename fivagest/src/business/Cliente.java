@@ -1,4 +1,4 @@
-package fivagest;
+package business;
 
 
 import java.util.ArrayList;
@@ -7,6 +7,10 @@ import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+
+import dao.ClienteDao;
+import dao.DataBaseHelper;
+import dao.PraticaDao;
 
 
 /**
@@ -148,7 +152,7 @@ public class Cliente {
 	 * Per informazioni sull'acconto virtuale, vedere ??? TODO: aggiungere da qualche parte la documentazione dell'acconto virtuale
 	 * @param accontoVirtuale oggetto Euro che rappresenta l'acconto virtuale del cliente
 	 */
-	private void setAccontoVirtuale(Euro accontoVirtuale) {
+	public void setAccontoVirtuale(Euro accontoVirtuale) {
 		this.accontoVirtuale = accontoVirtuale;
 	}
 
@@ -176,7 +180,7 @@ public class Cliente {
 	public void read() {
 		try {
 			//ClienteDao.load(this);
-			Dao.read(this);
+			ClienteDao.read(this);
 		} catch (Exception e) {
 			System.err.println("Errore nel caricamento dei dati del cliente: "+e.getMessage());
 			System.exit(1);
@@ -252,69 +256,6 @@ public class Cliente {
 			
 			this.setAccontoVirtuale(cifraCliente);
 			System.out.println("al cliente "+this+" restano "+this.getAccontoVirtuale());
-		}
-	}
-	
-
-	/**
-	 * Cliente Data Access Object
-	 * Questa classe si occupa della lettura e scrittura nel DB di dati che riguardano un Cliente
-	 * CRUD: Create, Read, Update, Delete
-	 * @author nico
-	 *
-	 */
-	public static class Dao {
-		
-		public static void read(Cliente cliente) throws Exception {
-			Connection connessione = null;
-			Statement state = null;
-			ResultSet result = null;
-			String query = "SELECT * FROM Cliente WHERE id = "+cliente.getId();
-			
-			connessione = DataBaseHelper.getConnection();
-			
-			try {
-			
-				state = connessione.createStatement();
-				result = state.executeQuery(query);
-			
-				// recupero i dati
-				if (result.isBeforeFirst()) {
-					result.first();
-					
-					// nome
-					cliente.setNome(result.getString("nome"));
-					
-					// cognome
-					cliente.setCognome(result.getString("cognome"));
-					
-					// acconto virtuale
-					if(result.getDouble("accontoVirtuale") != 0.0) {
-						cliente.setAccontoVirtuale(new Euro(result.getDouble("accontoVirtuale")));
-					}else{
-						// acconto virtuale mai null ma sempre con un valore Euro positivo (>= 0.00 )
-						cliente.setAccontoVirtuale(new Euro());
-					}
-					
-				} else {
-					// nessun cliente trovato
-					throw new Exception("nessun cliente con id "+cliente.getId()+" è presente nel database");
-				}
-				
-				result.close();
-				state.close();
-				connessione.close();
-				
-			} catch (SQLException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-			
-			
-		}
-		
-		public static void elencoCattiviPagatori() {
-			System.out.println("non ce ne sono");
 		}
 	}
 }

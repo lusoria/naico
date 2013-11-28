@@ -1,14 +1,18 @@
-package fivagest;
+package dao;
 
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 
+import business.Cliente;
+import business.Euro;
+
 
 /**
  * Cliente Data Access Object
  * Questa classe si occupa della lettura e scrittura nel DB di dati che riguardano un Cliente
+ * CRUD: Create, Read, Update, Delete
  * @author nico
  *
  */

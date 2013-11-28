@@ -1,4 +1,4 @@
-package fivagest;
+package business;
 
 import java.text.DateFormat;
 import java.text.ParseException;
@@ -6,6 +6,8 @@ import java.text.SimpleDateFormat;
 import java.util.Comparator;
 import java.util.Date;
 import java.util.GregorianCalendar;
+
+import dao.PraticaDao;
 
 
 /**

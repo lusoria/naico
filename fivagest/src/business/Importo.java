@@ -1,4 +1,4 @@
-package fivagest;
+package business;
 
 import java.math.BigDecimal;
 
