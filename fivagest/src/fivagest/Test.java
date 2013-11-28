@@ -2,6 +2,8 @@ package fivagest;
 
 import java.util.GregorianCalendar;
 
+import fivagest.Cliente.Dao;
+
 
 
 
@@ -10,9 +12,13 @@ public class Test {
 
 	public static void main(String Args[]) {
 
-			NotaSpese r = new NotaSpese(15);
-			Report b = new NotaSpese(14);
+			Cliente titolare = new Cliente(1);
+			titolare.read();
+
+			System.out.println(titolare);
+			System.out.println(titolare.getAccontoVirtuale());
 			
+			Dao.elencoCattiviPagatori();
 			
 			
 		
