@@ -20,7 +20,7 @@ public class Cliente {
 	private int id;
 	private String nome;
 	private String cognome;
-	private String pec;
+	private Email pec;
 	private PartitaIva partitaiva;
 	private Euro accontoVirtuale;
 	
@@ -49,7 +49,7 @@ public class Cliente {
 	 * @return stringa col nome completo
 	 */
 	public String getNome() {
-		return cognome+", "+nome;
+		return this.cognome+", "+this.nome;
 	}
 	
 	
@@ -73,20 +73,45 @@ public class Cliente {
 	
 	/**
 	 * Restituisce la PEC del cliente, spesso (non sempre) nel formato "cognome.nome@pec.it"
-	 * @return stringa dell'indirizzo PEC
+	 * @return oggetto Email dell'indirizzo PEC
 	 */
-	public String getPec() {
-		// TODO:	trovare soluzione per indirizzo mail ben formato e abbandonare la semplice stringa
-		return pec;
+	public Email getPec() {
+		return this.pec;
+	}
+	
+	
+	/**
+	 * Restituisce la PEC del cliente linkabile in HTML"
+	 * @return stringa linkabile all'indirizzo PEC
+	 */
+	public String getPecLinkabile() {
+		return this.pec.link(this.getNome());
 	}
 	
 	
 	/**
 	 * Imposta la PEC del Cliente
-	 * @param pec stringa PEC del cliente
+	 * @param pec oggetto Email per la PEC del cliente
+	 */
+	public void setPec(Email pec) {
+		this.pec = pec;
+	}
+	
+	
+	/**
+	 * Imposta la PEC del Cliente
+	 * @param pec stringa per la PEC del cliente
 	 */
 	public void setPec(String pec) {
-		this.pec = pec;
+		Email mail = null;
+		try {
+			mail = new Email(pec);
+		}catch(Exception e) {
+			System.err.println("Impossibile impostare la PEC del cliente "+this+": ");
+			System.err.print(e.getMessage());
+			System.exit(1);
+		}
+		this.pec = mail;
 	}
 	
 	
@@ -95,7 +120,7 @@ public class Cliente {
 	 * @return oggetto PartitaIVA del cliente
 	 */
 	public PartitaIva getPartitaIva() {
-		return partitaiva;
+		return this.partitaiva;
 	}
 	
 	
@@ -114,7 +139,7 @@ public class Cliente {
 	 * @return acconto virtuale (oggetto Euro) del cliente
 	 */
 	public Euro getAccontoVirtuale() {
-		return accontoVirtuale;
+		return this.accontoVirtuale;
 	}
 
 
@@ -232,7 +257,9 @@ public class Cliente {
 	
 
 	/**
-	 * 
+	 * Cliente Data Access Object
+	 * Questa classe si occupa della lettura e scrittura nel DB di dati che riguardano un Cliente
+	 * CRUD: Create, Read, Update, Delete
 	 * @author nico
 	 *
 	 */
@@ -270,7 +297,7 @@ public class Cliente {
 					}
 					
 				} else {
-					// nessun cliente selezionato!!
+					// nessun cliente trovato
 					throw new Exception("nessun cliente con id "+cliente.getId()+" è presente nel database");
 				}
 				
