@@ -1,0 +1,295 @@
+package fivagest;
+
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Comparator;
+import java.util.Date;
+import java.util.GregorianCalendar;
+
+
+/**
+ * Un oggetto Pratica è la rappresentazione di un qualsiasi lavoro/servizio/oggetto
+ * che l'ufficio fornisce ad un solo cliente e che viene ricompensato da un solo importo in Euro (>= 0.00 €).
+ * Un oggetto Pratica ha anche una voce Spese (in Euro) che rappresenta la somma di tutte quelle spese esenti iva
+ * (quindi non oggetti Importi) che è utile che stiano visibilmente separate e che, in fattura, avranno una voce dedicata.
+ * @author nico
+ *
+ */
+public class Pratica implements Comparable<Pratica>{
+
+	private int id;
+	private Cliente cliente;
+	
+	private Importo imponibile;
+	private Euro spese;
+	
+	private String descrizione;
+	
+	/*
+	data pagamento:
+	Data dalla quale il cliente sarà ufficialmente in debito per la pratica in oggetto.
+	Molto spesso coinciderà con la data di inserimento della pratica nel sistema, poichè si inizia subito a lavorarci e il cliente deve pagare da subito.
+	Ma a volte capita che una pratica viene inserite all'inizio dell'anno, ma non deve comparire tra i debiti del cliente, poichè non è ancora tempo.
+	Esempio: contabilità dei trimestri futuri.
+	*/
+	private GregorianCalendar dataPagamento;
+	private boolean pagata;
+	
+	
+	
+	/**
+	 * Costruttore per rappresentare una nuova pratica, non ancora presente nel database.
+	 * Con questo costruttore si potrà istanziare un oggetto pronto per essere memorizzato nel database poichè
+	 * qui bisogna fornire tutti gli attributi obbligatori.
+	 * @param cliente		Cliente per il quale è stata aperta la pratica da creare
+	 * @param imponibile	Euro di costo per il cliente della pratica da creare
+	 * @param spese			Euro di spese nostre sostenute per avviare la pratica
+	 * @param descrizione	Nome o brevissima descrizione della pratica
+	 * @param dataPagamento	Data dalla quale il cliente sarà ufficialmente in debito
+	 */
+	public Pratica(Cliente cliente, Importo imponibile, Euro spese, String descrizione, GregorianCalendar dataPagamento) {
+		// TODO: controllini sui parametri
+		this.cliente = cliente;
+		this.imponibile = imponibile;
+		this.spese = spese;
+		this.descrizione = descrizione;
+		this.setDataPagamento(dataPagamento);
+		this.pagata = false;
+		
+	}
+	
+	
+	
+	/**
+	 * Costruttore per rappresentare una pratica già esistente nel database e quindi con un identificativo univoco.
+	 * Per poter accedere ai vari parametri della pratica, usare in seguito il metodo leggiDB()
+	 * @param id	identificativo della pratica nel database
+	 */
+	public Pratica(int id) {
+		this.id = id;
+	}
+	
+	
+	
+	/**
+	 * Restituisce l'identificativo univoco con la quale la Pratica è salvata nel database. 
+	 * @return	int identificativo univoco della pratica
+	 */
+	public int getId() {
+		return this.id;
+	}
+	
+	
+	
+	/**
+	 * Restituisce la descrizione (ovvero il titolo) della Pratica (es.: "PEC: ATTIVAZIONE E COMUNICAZIONE")
+	 * @return descrizione (stringa tutta maiuscola)
+	 */
+	public String getDescrizione() {
+		return descrizione.toUpperCase();
+	}
+	
+	
+	
+	/**
+	 * Imposta la descrizione della Pratica corrente.
+	 * @param descrizione
+	 */
+	public void setDescrizione(String descrizione) {
+		this.descrizione = descrizione;
+	}
+	
+	
+	
+	/**
+	 * Restituisce il Cliente (l'unico) della Pratica
+	 * @return oggetto Cliente
+	 */
+	public Cliente getCliente() {
+		return this.cliente;
+	}
+	
+	
+	
+	/**
+	 * Imposta il cliente della pratica corrente
+	 * @param cliente (oggetto Cliente)
+	 */
+	public void setCliente(Cliente cliente) {
+		this.cliente = cliente;
+	}
+	
+	
+	
+	/**
+	 * Restituisce il costo della Pratica per il Cliente
+	 * @return imponibile (oggetto Importo)
+	 */
+	public Importo getImponibile() {
+		return this.imponibile;
+	}
+	
+	
+	
+	/**
+	 * Imposta il valore dell'imponibile (costo della pratica al cliente)
+	 * @param imponibile (oggetto Importo, tendenzialmente non ancora ivato)
+	 */
+	public void setImponibile(Importo imponibile) {
+		if(imponibile.isPositivo()) {
+			this.imponibile = imponibile;			
+		}else{
+			// TODO: inserire eccezione!
+		}
+		
+	}
+	
+	
+	
+	/**
+	 * Restituisce le spese affrontate dallo studio per la Pratica corrente.
+	 * Essenso spese esenti IVA, il metodo restituisce un oggetto Euro, dove appunto l'iva non potrà essere applicata.
+	 * @return	spese esenti IVA 
+	 */
+	public Euro getSpese() {
+		return this.spese;
+	}
+	
+	
+	
+	/**
+	 * Imposta le spese per la Pratica corrente in Euro.
+	 * @param spese
+	 */
+	public void setSpese(Euro spese) {
+		if(spese.isPositivo()) {
+			this.spese = spese;
+		}else{
+			// TODO: scrivere l'eccezione per spese negative
+		}
+	}
+	
+	
+	
+	public String getStringaData() {
+		Date d = this.dataPagamento.getTime();
+		DateFormat df = new SimpleDateFormat("dd/MM/yyyy");
+		return df.format(d);
+	}
+	
+	
+	
+	public void setDataPagamentoMYSQL(String stringaData) {
+		DateFormat df = new SimpleDateFormat("yyyy-MM-dd");
+		Date data = null;
+		try {
+			data = df.parse(stringaData);
+		}catch(ParseException e) {
+			System.out.println("Errore nel parsing della data: "+e.getMessage());
+			System.exit(1);
+		}
+		GregorianCalendar calendario = new GregorianCalendar();
+		calendario.setTime(data);
+		this.dataPagamento = calendario;
+		
+	}
+	
+	public void setDataPagamento(GregorianCalendar dataPagamento) {
+		this.dataPagamento = dataPagamento;
+	}
+	
+	public GregorianCalendar getDataPagamento() {
+		return dataPagamento;
+	}
+
+
+	public String getDataPagamentoString() {
+		SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
+		return sdf.format(this.dataPagamento.getTime());
+	}
+	
+	
+
+	/**
+	 * Restituisce se la Pratica corrente è stata pagata oppure no.  
+	 * @return	boolean
+	 */
+	public boolean isPagata() {
+		return this.pagata;
+	}
+	
+	
+	
+	public void setPagata() {
+		if(!this.pagata) {
+			this.pagata = true;
+		}
+	}
+	
+	
+	
+	public void printPratica() {
+		Cliente tizio = this.cliente;
+		try {
+			tizio.leggiDB();
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		System.out.println("-----");
+		System.out.println("Pratica ["+this.getId()+"] di "+this.imponibile+" con "+this.getSpese()+" di spese: "+this.getDescrizione());
+		System.out.println("per "+tizio);
+		System.out.println("pagamento al "+this.getDataPagamentoString());
+	}
+	
+
+	
+	/**
+	 * alfabeticamente sulla descrizione!!
+	 */
+	@Override
+	public int compareTo(Pratica pratica) {
+		// TODO Auto-generated method stub
+		return this.descrizione.compareToIgnoreCase(pratica.getDescrizione());
+		//return this.getData().compareTo(pratica.getData());
+	}
+	
+	
+	
+	public void leggiDB() throws Exception {
+		PraticaDao.load(this);
+	}
+	
+	
+	
+	/**
+	 * Classe comparator. Implementa unicamente il metodo compare e serve per ordinare le Pratiche per loro Imponibile
+	 * dal più basso al più alto.
+	 * @author nico
+	 *
+	 */
+	static class ImponibileComparator implements Comparator<Pratica> {
+
+		@Override
+		public int compare(Pratica p1, Pratica p2) {
+			return p1.getImponibile().compareTo(p2.getImponibile());
+		}
+	}
+	
+	
+	/**
+	 * Sottoclasse comparator. Implementa unicamente il metodo compare e serve per ordinare le Pratiche per Data di pagamento
+	 * dalla meno recente alla più recente.
+	 * @author nico
+	 *
+	 */
+	static class DataPagamentoComparator implements Comparator<Pratica> {
+
+		@Override
+		public int compare(Pratica p1, Pratica p2) {
+			return p1.getDataPagamento().compareTo(p2.getDataPagamento());
+		}
+		
+	}
+}
