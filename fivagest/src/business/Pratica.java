@@ -233,12 +233,9 @@ public class Pratica implements Comparable<Pratica>{
 	
 	public void printPratica() {
 		Cliente tizio = this.cliente;
-		try {
-			tizio.leggiDB();
-		} catch (Exception e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+
+		// TODO: tizio è sincronizzato col db?
+		
 		System.out.println("-----");
 		System.out.println("Pratica ["+this.getId()+"] di "+this.imponibile+" con "+this.getSpese()+" di spese: "+this.getDescrizione());
 		System.out.println("per "+tizio);

@@ -1,9 +1,9 @@
 package test;
 
-import java.util.GregorianCalendar;
 
-import business.Cliente;
-import business.Cliente.Dao;
+
+import business.*;
+import dao.*;
 
 
 
@@ -13,12 +13,24 @@ public class Test {
 
 	public static void main(String Args[]) {
 
+		ClienteDao dao = new ClienteDao();
+		Cliente titolare = null;
+		try {
+			titolare = dao.getCliente(1);
+		} catch (Exception e) {
+			System.err.println("no clienti con tale id");
+			System.exit(1);
+		}
+		
+		System.out.println(titolare);
+		
+		/*
 		Cliente tizio = new Cliente(1);
 		tizio.read();
 		tizio.setPec("ciao@gaio.com");
 		
 		System.out.println(tizio.getPecLinkabile());
-		
+		*/
 		
 		
 	

@@ -3,13 +3,7 @@ package business;
 
 import java.util.ArrayList;
 import java.util.Iterator;
-import java.sql.Connection;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Statement;
 
-import dao.ClienteDao;
-import dao.DataBaseHelper;
 import dao.PraticaDao;
 
 
@@ -166,26 +160,6 @@ public class Cliente {
 		return this.getNome()+" ["+Integer.toString(this.id)+"]";		
 	}
 	
-	
-	/**
-	 * Carica dal DB i dati del Cliente corrente.<br>
-	 * ATTENZIONE! Questo metodo sovrascrive gli attributi già memorizzati nell'oggetto Cliente.<br>
-	 * Tipicamente questo metodo viene usato immediatamente dopo aver istanziato un nuovo oggetto Cliente per mezzo dell'id:<br>
-	 * <pre>
-	 * 	Cliente titolare = new Cliente(42);
-	 * 	titolare.read();
-	 * 	...
-	 * </pre>
-	 */
-	public void read() {
-		try {
-			//ClienteDao.load(this);
-			ClienteDao.read(this);
-		} catch (Exception e) {
-			System.err.println("Errore nel caricamento dei dati del cliente: "+e.getMessage());
-			System.exit(1);
-		}
-	}
 	
 	
 	/**

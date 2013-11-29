@@ -18,16 +18,28 @@ import business.Euro;
  */
 public class ClienteDao {
 
+
 	
+
 	/**
-	 * Recupera i dati dal database e cerca di riempire l'oggetto Cliente con più dati possibili.
-	 * Alcuni saranno obbligatori e quindi sicuramente presenti nel database, mentre altri facoltativi.
-	 * In quest'ultimo caso, per quanto possibile, verranno lasciati vuoti i relativi attributi. 
-	 * @param cliente		oggetto Cliente
-	 * @throws Exception	se viene passato un cliente che non esiste nel database
+	 * Recupera i dati dal database e cerca di riempire l'oggetto Cliente con più dati possibili.<br>
+	 * Alcuni saranno obbligatori e quindi sicuramente presenti nel database, mentre altri facoltativi.<br>
+	 * In quest'ultimo caso, i relativi attributi verranno settati sul loro valore di default o lasciati vuoti.
+	 * 
+	 * ATTENZIONE! Questo metodo sovrascrive gli attributi già memorizzati nell'oggetto Cliente.<br>
+	 * Tipicamente questo metodo viene usato immediatamente dopo aver istanziato un nuovo oggetto Cliente per mezzo dell'id:<br>
+	 * <pre>
+	 * 	Cliente titolare = new Cliente(42);
+	 * 	titolare.read();
+	 * 	...
+	 * </pre>
+	 * 
+	 * @param cliente oggetto Cliente
+	 * @throws Exception se viene passato un cliente che non esiste nel database
 	 */
-	public static void load(Cliente cliente) throws Exception {
-		// TODO Auto-generated method stub
+	public Cliente getCliente(int id) throws Exception {
+
+		Cliente cliente = new Cliente(id);
 		
 		Connection connessione = null;
 		Statement state = null;
@@ -73,6 +85,7 @@ public class ClienteDao {
 			e.printStackTrace();
 		}
 		
+		return cliente;
 		
 	}
 	

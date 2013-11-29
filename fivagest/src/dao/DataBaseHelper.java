@@ -32,9 +32,6 @@ public class DataBaseHelper {
     }
    
     
-    public static 
-    
-    
     public static void manageError(SQLException erroreSQL, String query) {
 
     	System.err.println("Errore nell'esecuzione della query: "+query);
