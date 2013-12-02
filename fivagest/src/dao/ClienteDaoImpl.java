@@ -7,8 +7,9 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
 
-import business.Cliente;
-import business.Euro;
+import model.Cliente;
+import model.Euro;
+import util.DataBaseHelper;
 
 
 /**

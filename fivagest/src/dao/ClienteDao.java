@@ -1,14 +1,16 @@
 package dao;
 
 import java.util.ArrayList;
-import business.Cliente;
+
+import model.Cliente;
 
 
 public interface ClienteDao {
 
-	public ArrayList<Cliente> getTuttiClienti();
 	
 	public void getCliente(int id);
+	
+	public ArrayList<Cliente> getTuttiClienti();
 	
 	public ArrayList<Cliente> getDebitori();
 	

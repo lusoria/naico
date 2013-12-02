@@ -4,8 +4,10 @@ package test;
 import static org.junit.Assert.assertEquals;
 
 import java.math.BigDecimal;
+
+import model.Euro;
+
 import org.junit.Test;
-import business.Euro;
 
 
 class TestEuro {

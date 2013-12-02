@@ -1,10 +1,11 @@
 package test;
 
 import static org.junit.Assert.*;
+import model.Aliquota;
+import model.Euro;
+import model.Importo;
+
 import org.junit.Test;
-import business.Aliquota;
-import business.Euro;
-import business.Importo;
 
 public class TestImporto {
 
