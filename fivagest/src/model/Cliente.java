@@ -4,6 +4,7 @@ package model;
 import java.util.ArrayList;
 import java.util.Iterator;
 
+import model.soldi.Euro;
 import dao.PraticaDao;
 
 
@@ -24,8 +25,8 @@ public class Cliente {
 	
 	
 	/**
-	 * Crea la rappresentazione di un cliente già esistente nel database e quindi con un identificativo univoco.<br>
-	 * Per caricare e quindi poter accedere ai vari parametri del Cliente, usare in seguito il metodo read()
+	 * Crea un Cliente <b>vuoto</b>, con solo il suo identificativo nel DB.<br>
+	 * Per avere un Cliente istanziato correttamente dal solo id, usare la classe DAO corrispondente.
 	 * @param id identificativo del cliente nel database
 	 */
 	public Cliente(int id) {
@@ -232,4 +233,6 @@ public class Cliente {
 			System.out.println("al cliente "+this+" restano "+this.getAccontoVirtuale());
 		}
 	}
+
+
 }

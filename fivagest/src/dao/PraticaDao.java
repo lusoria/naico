@@ -6,11 +6,11 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
 
-import model.Aliquota;
 import model.Cliente;
-import model.Euro;
-import model.Importo;
 import model.Pratica;
+import model.soldi.Aliquota;
+import model.soldi.Euro;
+import model.soldi.Importo;
 import util.DataBaseHelper;
 
 public class PraticaDao {

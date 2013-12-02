@@ -1,7 +1,10 @@
-package model;
+package model.report;
 
 import java.util.ArrayList;
 import java.util.GregorianCalendar;
+
+import model.Cliente;
+import model.Pratica;
 
 
 /**

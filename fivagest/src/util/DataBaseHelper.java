@@ -34,12 +34,18 @@ public class DataBaseHelper {
     
     public static void manageError(SQLException erroreSQL, String query) {
 
-    	System.err.println("Errore nell'esecuzione della query: "+query);
+    	System.err.println("Query: "+query);
+		DataBaseHelper.manageError(erroreSQL);
+    }
+    
+    
+    public static void manageError(SQLException erroreSQL) {
+
+    	System.err.println("Errore nell'interrogazione del Database");
 		System.err.println("SQLState: " + erroreSQL.getSQLState());
         System.err.println("Error Code: " + erroreSQL.getErrorCode());
         System.err.println("Message: " + erroreSQL.getMessage());
         System.exit(1);
     }
-    
     
 }

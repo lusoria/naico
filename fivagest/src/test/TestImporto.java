@@ -1,9 +1,9 @@
 package test;
 
 import static org.junit.Assert.*;
-import model.Aliquota;
-import model.Euro;
-import model.Importo;
+import model.soldi.Aliquota;
+import model.soldi.Euro;
+import model.soldi.Importo;
 
 import org.junit.Test;
 

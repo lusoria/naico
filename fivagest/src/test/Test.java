@@ -15,15 +15,11 @@ public class Test {
 
 
 		System.out.println("ciao");
-		Cliente titolare = null;
-		try {
-			titolare = ClienteDaoImpl.getCliente(1);
-		} catch (Exception e) {
-			System.err.println("no clienti con tale id");
-			System.exit(1);
+		for(Cliente cliente : ClienteDao.getTuttiClienti()) {
+			System.out.println(cliente);
 		}
 		
-		System.out.println(titolare);
+		
 		
 		/*
 		Cliente tizio = new Cliente(1);

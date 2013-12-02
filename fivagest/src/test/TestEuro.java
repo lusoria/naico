@@ -5,7 +5,7 @@ import static org.junit.Assert.assertEquals;
 
 import java.math.BigDecimal;
 
-import model.Euro;
+import model.soldi.Euro;
 
 import org.junit.Test;
 

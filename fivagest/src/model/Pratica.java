@@ -7,6 +7,8 @@ import java.util.Comparator;
 import java.util.Date;
 import java.util.GregorianCalendar;
 
+import model.soldi.Euro;
+import model.soldi.Importo;
 import dao.PraticaDao;
 
 
@@ -20,14 +22,12 @@ import dao.PraticaDao;
  */
 public class Pratica implements Comparable<Pratica>{
 
+	
 	private int id;
 	private Cliente cliente;
-	
 	private Importo imponibile;
 	private Euro spese;
-	
 	private String descrizione;
-	
 	/*
 	data pagamento:
 	Data dalla quale il cliente sarà ufficialmente in debito per la pratica in oggetto.
@@ -64,8 +64,7 @@ public class Pratica implements Comparable<Pratica>{
 	
 	
 	/**
-	 * Costruttore per rappresentare una pratica già esistente nel database e quindi con un identificativo univoco.
-	 * Per poter accedere ai vari parametri della pratica, usare in seguito il metodo leggiDB()
+	 * Costruttore per una pratica vuota.
 	 * @param id	identificativo della pratica nel database
 	 */
 	public Pratica(int id) {

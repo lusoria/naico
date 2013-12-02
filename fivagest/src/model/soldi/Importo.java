@@ -1,4 +1,4 @@
-package model;
+package model.soldi;
 
 import java.math.BigDecimal;
 
