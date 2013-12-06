@@ -11,10 +11,10 @@ import dao.*;
 public class Test {
 
 	public static void main(String Args[]) {
-
-
-
-		System.out.println("ciao");
+		System.out.println("inizio test");
+		
+		
+		
 		for(Cliente cliente : ClienteDao.getTuttiClienti()) {
 			System.out.println(cliente);
 		}

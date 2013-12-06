@@ -34,6 +34,20 @@ public class Cliente {
 	}
 	
 	
+	
+	/**
+	 * Rappresentazione di un nuovo Cliente con i soli parametri obbligatori per poter essere salvato nel DB.<br>
+	 * Il Cliente appena creato avrà un acconto Virtuale pari a 0,00 €.
+	 * @param nome
+	 * @param cognome
+	 */
+	public Cliente(String nome, String cognome) {
+		this.nome = nome;
+		this.cognome = cognome;
+		this.accontoVirtuale =  new Euro();
+	}
+	
+	
 	/**
 	 * Restituisce l'identificativo che il Cliente ha sul DB
 	 * @return identificativo del cliente nel database

@@ -9,7 +9,6 @@ import java.util.GregorianCalendar;
 
 import model.soldi.Euro;
 import model.soldi.Importo;
-import dao.PraticaDao;
 
 
 /**
@@ -39,16 +38,15 @@ public class Pratica implements Comparable<Pratica>{
 	private boolean pagata;
 	
 	
-	
 	/**
 	 * Costruttore per rappresentare una nuova pratica, non ancora presente nel database.
 	 * Con questo costruttore si potrà istanziare un oggetto pronto per essere memorizzato nel database poichè
 	 * qui bisogna fornire tutti gli attributi obbligatori.
-	 * @param cliente		Cliente per il quale è stata aperta la pratica da creare
-	 * @param imponibile	Euro di costo per il cliente della pratica da creare
-	 * @param spese			Euro di spese nostre sostenute per avviare la pratica
-	 * @param descrizione	Nome o brevissima descrizione della pratica
-	 * @param dataPagamento	Data dalla quale il cliente sarà ufficialmente in debito
+	 * @param cliente Cliente per il quale è stata aperta la pratica da creare
+	 * @param imponibile Euro di costo per il cliente della pratica da creare
+	 * @param spese Euro di spese nostre sostenute per avviare la pratica
+	 * @param descrizione Nome o brevissima descrizione della pratica
+	 * @param dataPagamento Data dalla quale il cliente sarà ufficialmente in debito
 	 */
 	public Pratica(Cliente cliente, Importo imponibile, Euro spese, String descrizione, GregorianCalendar dataPagamento) {
 		// TODO: controllini sui parametri
@@ -62,15 +60,13 @@ public class Pratica implements Comparable<Pratica>{
 	}
 	
 	
-	
 	/**
 	 * Costruttore per una pratica vuota.
-	 * @param id	identificativo della pratica nel database
+	 * @param id identificativo della pratica nel database
 	 */
 	public Pratica(int id) {
 		this.id = id;
 	}
-	
 	
 	
 	/**
@@ -82,7 +78,6 @@ public class Pratica implements Comparable<Pratica>{
 	}
 	
 	
-	
 	/**
 	 * Restituisce la descrizione (ovvero il titolo) della Pratica (es.: "PEC: ATTIVAZIONE E COMUNICAZIONE")
 	 * @return descrizione (stringa tutta maiuscola)
@@ -90,7 +85,6 @@ public class Pratica implements Comparable<Pratica>{
 	public String getDescrizione() {
 		return descrizione.toUpperCase();
 	}
-	
 	
 	
 	/**
@@ -102,7 +96,6 @@ public class Pratica implements Comparable<Pratica>{
 	}
 	
 	
-	
 	/**
 	 * Restituisce il Cliente (l'unico) della Pratica
 	 * @return oggetto Cliente
@@ -110,7 +103,6 @@ public class Pratica implements Comparable<Pratica>{
 	public Cliente getCliente() {
 		return this.cliente;
 	}
-	
 	
 	
 	/**
@@ -122,7 +114,6 @@ public class Pratica implements Comparable<Pratica>{
 	}
 	
 	
-	
 	/**
 	 * Restituisce il costo della Pratica per il Cliente
 	 * @return imponibile (oggetto Importo)
@@ -130,7 +121,6 @@ public class Pratica implements Comparable<Pratica>{
 	public Importo getImponibile() {
 		return this.imponibile;
 	}
-	
 	
 	
 	/**
@@ -147,7 +137,6 @@ public class Pratica implements Comparable<Pratica>{
 	}
 	
 	
-	
 	/**
 	 * Restituisce le spese affrontate dallo studio per la Pratica corrente.
 	 * Essenso spese esenti IVA, il metodo restituisce un oggetto Euro, dove appunto l'iva non potrà essere applicata.
@@ -156,7 +145,6 @@ public class Pratica implements Comparable<Pratica>{
 	public Euro getSpese() {
 		return this.spese;
 	}
-	
 	
 	
 	/**
@@ -172,43 +160,38 @@ public class Pratica implements Comparable<Pratica>{
 	}
 	
 	
-	
-	public String getStringaData() {
-		Date d = this.dataPagamento.getTime();
-		DateFormat df = new SimpleDateFormat("dd/MM/yyyy");
-		return df.format(d);
+	/**
+	 * Restituisce la data di pagamento della pratica corrente.<br>
+	 * @return data di pagamento
+	 */
+	public GregorianCalendar getDataPagamento() {
+		return dataPagamento;
 	}
 	
 	
-	
-	public void setDataPagamentoMYSQL(String stringaData) {
-		DateFormat df = new SimpleDateFormat("yyyy-MM-dd");
-		Date data = null;
-		try {
-			data = df.parse(stringaData);
-		}catch(ParseException e) {
-			System.out.println("Errore nel parsing della data: "+e.getMessage());
-			System.exit(1);
-		}
-		GregorianCalendar calendario = new GregorianCalendar();
-		calendario.setTime(data);
-		this.dataPagamento = calendario;
-		
-	}
-	
+	/**
+	 * Imposta la data del pagamento. Vedi la documentazione tra gli attributi
+	 * @param dataPagamento
+	 */
 	public void setDataPagamento(GregorianCalendar dataPagamento) {
 		this.dataPagamento = dataPagamento;
 	}
 	
-	public GregorianCalendar getDataPagamento() {
-		return dataPagamento;
-	}
-
-
+	
+	/*
+	public String getStringaData() {
+		Date d = this.dataPagamento.getTime();
+		DateFormat df = new SimpleDateFormat("dd/MM/yyyy");
+		return df.format(d);
+	}*/
+	
+	
+	/*
 	public String getDataPagamentoString() {
 		SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
 		return sdf.format(this.dataPagamento.getTime());
 	}
+	*/
 	
 	
 
@@ -222,14 +205,18 @@ public class Pratica implements Comparable<Pratica>{
 	
 	
 	
+	/**
+	 * Imposta la Pratica corrente come pagata.<br>
+	 * Non è consentita l'operazione inversa.
+	 */
 	public void setPagata() {
-		if(!this.pagata) {
-			this.pagata = true;
-		}
+		this.pagata = true;
 	}
 	
 	
-	
+	/**
+	 * Stampa la descrizione della Pratica. SOLO PER DEBUG!
+	 */
 	public void printPratica() {
 		Cliente tizio = this.cliente;
 
@@ -238,7 +225,7 @@ public class Pratica implements Comparable<Pratica>{
 		System.out.println("-----");
 		System.out.println("Pratica ["+this.getId()+"] di "+this.imponibile+" con "+this.getSpese()+" di spese: "+this.getDescrizione());
 		System.out.println("per "+tizio);
-		System.out.println("pagamento al "+this.getDataPagamentoString());
+		System.out.println("pagamento al "+this.getDataPagamento());
 	}
 	
 
@@ -252,13 +239,6 @@ public class Pratica implements Comparable<Pratica>{
 		return this.descrizione.compareToIgnoreCase(pratica.getDescrizione());
 		//return this.getData().compareTo(pratica.getData());
 	}
-	
-	
-	
-	public void leggiDB() throws Exception {
-		PraticaDao.load(this);
-	}
-	
 	
 	
 	/**
