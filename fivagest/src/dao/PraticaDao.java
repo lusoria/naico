@@ -4,18 +4,14 @@ import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
-import java.text.DateFormat;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Date;
-import java.util.GregorianCalendar;
 
 import model.Cliente;
 import model.Pratica;
 import model.soldi.Aliquota;
 import model.soldi.Euro;
 import model.soldi.Importo;
+import util.Data;
 import util.DataBaseHelper;
 
 public class PraticaDao {
@@ -51,7 +47,7 @@ public class PraticaDao {
 				pratica.setCliente(new Cliente(result.getInt("cliente")));
 				
 				// imponibile obbligatorio
-				// ATTENZIONE!! aliquota al 22% e importo non ivato HARD CODED!
+				// TODO: ATTENZIONE!! aliquota al 22% e importo non ivato HARD CODED!
 				Importo imponibile = new Importo(result.getBigDecimal("imponibile"), new Aliquota(22), false);
 				pratica.setImponibile(imponibile);
 				
@@ -62,7 +58,7 @@ public class PraticaDao {
 				pratica.setDescrizione(result.getString("descrizione"));
 				
 				// data pagamento obbligatoria
-				pratica.setDataPagamento(mysqlData2Gregorian(result.getString("dataPagamento")));
+				pratica.setDataPagamento(new Data(result.getString("dataPagamento")));
 				
 			} else {
 				// nessuna pratica selezionata!!
@@ -118,8 +114,7 @@ public class PraticaDao {
 					pratica.setSpese(new Euro(result.getDouble("spese")));
 					pratica.setDescrizione(result.getString("descrizione"));
 					
-					
-					pratica.setDataPagamento(mysqlData2Gregorian(result.getString("dataPagamento")));
+					pratica.setDataPagamento(new Data(result.getString("dataPagamento")));
 					
 					pratiche.add(pratica);
 					
@@ -137,24 +132,5 @@ public class PraticaDao {
 			
 		return pratiche;
 		
-	}
-	
-	
-	/**
-	 * Converte una Data di MySQL in un oggetto GregorianCalendar
-	 * @param stringaDataMYSQL data memorizzata nel DB (nel formato usato da MySQL)
-	 */
-	private static GregorianCalendar mysqlData2Gregorian(String stringaDataMYSQL) {
-		DateFormat df = new SimpleDateFormat("yyyy-MM-dd");
-		Date data = null;
-		try {
-			data = df.parse(stringaDataMYSQL);
-		}catch(ParseException e) {
-			System.out.println("Errore nel parsing della data: "+e.getMessage());
-			System.exit(1);
-		}
-		GregorianCalendar calendario = new GregorianCalendar();
-		calendario.setTime(data);
-		return calendario;
 	}
 }

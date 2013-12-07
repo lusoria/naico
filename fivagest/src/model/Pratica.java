@@ -1,14 +1,10 @@
 package model;
 
-import java.text.DateFormat;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.Comparator;
-import java.util.Date;
-import java.util.GregorianCalendar;
 
 import model.soldi.Euro;
 import model.soldi.Importo;
+import util.Data;
 
 
 /**
@@ -34,7 +30,7 @@ public class Pratica implements Comparable<Pratica>{
 	Ma a volte capita che una pratica viene inserite all'inizio dell'anno, ma non deve comparire tra i debiti del cliente, poichè non è ancora tempo.
 	Esempio: contabilità dei trimestri futuri.
 	*/
-	private GregorianCalendar dataPagamento;
+	private Data dataPagamento;
 	private boolean pagata;
 	
 	
@@ -48,7 +44,7 @@ public class Pratica implements Comparable<Pratica>{
 	 * @param descrizione Nome o brevissima descrizione della pratica
 	 * @param dataPagamento Data dalla quale il cliente sarà ufficialmente in debito
 	 */
-	public Pratica(Cliente cliente, Importo imponibile, Euro spese, String descrizione, GregorianCalendar dataPagamento) {
+	public Pratica(Cliente cliente, Importo imponibile, Euro spese, String descrizione, Data dataPagamento) {
 		// TODO: controllini sui parametri
 		this.cliente = cliente;
 		this.imponibile = imponibile;
@@ -164,7 +160,7 @@ public class Pratica implements Comparable<Pratica>{
 	 * Restituisce la data di pagamento della pratica corrente.<br>
 	 * @return data di pagamento
 	 */
-	public GregorianCalendar getDataPagamento() {
+	public Data getDataPagamento() {
 		return dataPagamento;
 	}
 	
@@ -173,26 +169,9 @@ public class Pratica implements Comparable<Pratica>{
 	 * Imposta la data del pagamento. Vedi la documentazione tra gli attributi
 	 * @param dataPagamento
 	 */
-	public void setDataPagamento(GregorianCalendar dataPagamento) {
+	public void setDataPagamento(Data dataPagamento) {
 		this.dataPagamento = dataPagamento;
 	}
-	
-	
-	/*
-	public String getStringaData() {
-		Date d = this.dataPagamento.getTime();
-		DateFormat df = new SimpleDateFormat("dd/MM/yyyy");
-		return df.format(d);
-	}*/
-	
-	
-	/*
-	public String getDataPagamentoString() {
-		SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
-		return sdf.format(this.dataPagamento.getTime());
-	}
-	*/
-	
 	
 
 	/**

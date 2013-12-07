@@ -2,8 +2,20 @@ package test;
 
 
 
-import model.*;
-import dao.*;
+
+
+import java.util.ArrayList;
+
+import model.Cliente;
+import model.Pratica;
+import model.soldi.Aliquota;
+import model.soldi.Euro;
+import model.soldi.Importo;
+import util.Data;
+
+
+
+
 
 
 
@@ -13,44 +25,34 @@ public class Test {
 	public static void main(String Args[]) {
 		System.out.println("inizio test");
 		
-		
-		
-		for(Cliente cliente : ClienteDao.getTuttiClienti()) {
-			System.out.println(cliente);
+		// creo nuova data con formato mysql
+		Data inizioAnno = new Data("2014-01-01");
+		System.out.println("compleanno: "+inizioAnno);
+
+		// creo altra data e faccio il paragone
+		Data fineAnno = new Data("31/12/2013");
+		if(inizioAnno.compareTo(fineAnno) < 0) {
+			System.out.println(inizioAnno);
+		}else {
+			System.out.println(fineAnno);
 		}
 		
+		// creo una pratica p1 più vecchia ma più costosa
+		Cliente tony = new Cliente("Tony", "Concilianti");
+		Pratica p1 = new Pratica(tony, new Importo("42.00", new Aliquota(22), false), new Euro(), "SCIA", fineAnno);
+		p1.printPratica();
 		
+		// creo una pratica p2 più recente ma meno costosa
+		Cliente bobby = new Cliente("Bobby", "Solo");
+		Pratica p2 = new Pratica(bobby, new Importo("42.50", new Aliquota(22), false), new Euro(), "SCIA", inizioAnno);
+		p2.printPratica();
 		
-		/*
-		Cliente tizio = new Cliente(1);
-		tizio.read();
-		tizio.setPec("ciao@gaio.com");
+		ArrayList<Pratica> listaPratiche = new ArrayList<Pratica>();
+		listaPratiche.add(p1);
+		listaPratiche.add(p2);
 		
-		System.out.println(tizio.getPecLinkabile());
-		*/
-		
-		
-	
-		/*
-		Cliente tizio = new Cliente(1);
-		tizio.leggiDB();
-		System.out.println("pratiche non ordinate per "+tizio);
-		
-		for(Pratica p : tizio.selectPraticheNonPagate()) {
-			p.printPratica();
-		}
-		
-		System.out.println("");
-		
-		GregorianCalendar finoal = new GregorianCalendar(2013, 11, 4);
-		GregorianCalendar creazione = new GregorianCalendar();
-		NotaSpese ns = new NotaSpese(finoal, tizio, creazione);
-		
-		ns.stampa();
-		*/
-		System.exit(0);
-			
-			
+
+
 	}
 
 }
