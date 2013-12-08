@@ -36,6 +36,14 @@ public class Data extends GregorianCalendar {
 	}
 	
 	
+	/**
+	 * Crea un oggetto Data dalla data corrente
+	 */
+	public Data() {
+		super();
+	}
+	
+	
 	private Date parsaFormato(String stringaData) {
 		for(String formato : this.FORMATI_SUPPORTATI) {
 			try {

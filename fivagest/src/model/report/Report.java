@@ -1,10 +1,10 @@
 package model.report;
 
 import java.util.ArrayList;
-import java.util.GregorianCalendar;
 
 import model.Cliente;
 import model.Pratica;
+import util.Data;
 
 
 /**
@@ -25,7 +25,7 @@ import model.Pratica;
 public abstract class Report {
 
 	protected int id;						// identificativo nel DB
-	protected GregorianCalendar creazione;	// timestamp del momento in cui viene creato il Report
+	protected Data creazione;				// timestamp del momento in cui viene creato il Report
 	protected Cliente cliente;				// cliente oggetto dell'indagine del Report
 	protected ArrayList<Pratica> pratiche;	// Lista delle pratiche (salvate nel db!) del cliente prese in esame dal Report
 	
@@ -51,7 +51,7 @@ public abstract class Report {
 	 * @param pratiche
 	 */
 	public Report(Cliente cliente, ArrayList<Pratica> pratiche) {
-		this.creazione = new GregorianCalendar();
+		this.creazione = new Data();
 		this.cliente = cliente;
 		this.pratiche = pratiche;
 	}

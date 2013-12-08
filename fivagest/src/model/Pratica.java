@@ -226,7 +226,7 @@ public class Pratica implements Comparable<Pratica>{
 	 * @author nico
 	 *
 	 */
-	static class ImponibileComparator implements Comparator<Pratica> {
+	public static class ImponibileComparator implements Comparator<Pratica> {
 
 		@Override
 		public int compare(Pratica p1, Pratica p2) {
@@ -241,7 +241,7 @@ public class Pratica implements Comparable<Pratica>{
 	 * @author nico
 	 *
 	 */
-	static class DataPagamentoComparator implements Comparator<Pratica> {
+	public static class DataPagamentoComparator implements Comparator<Pratica> {
 
 		@Override
 		public int compare(Pratica p1, Pratica p2) {

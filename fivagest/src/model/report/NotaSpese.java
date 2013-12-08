@@ -1,10 +1,8 @@
 package model.report;
 
-import java.util.ArrayList;
-import java.util.GregorianCalendar;
-
 import model.Cliente;
 import model.Pratica;
+import util.Data;
 
 
 /**
@@ -17,7 +15,7 @@ import model.Pratica;
  */
 public class NotaSpese extends Report {
 
-	GregorianCalendar dataIndagine;
+	Data dataIndagine;
 	
 	
 	
@@ -26,7 +24,7 @@ public class NotaSpese extends Report {
 	}
 	
 
-	public NotaSpese(GregorianCalendar dataIndagine, Cliente cliente) {
+	public NotaSpese(Data dataIndagine, Cliente cliente) {
 		// TODO: escludere quelle dopo la data di indagine!! 
 		super(cliente, cliente.selectPraticheNonPagate());
 
