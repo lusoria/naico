@@ -1,9 +1,9 @@
 package dao;
 
 import java.sql.Connection;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.sql.Statement;
 import java.util.ArrayList;
 
 import model.Cliente;
@@ -29,49 +29,55 @@ public class PraticaDao {
 	 * @param pratica
 	 * @throws Exception
 	 */
-	public static void load(Pratica pratica) throws Exception {
+	public static Pratica getPratica(int idPratica) throws Exception {
+		
 		Connection connessione = null;
-		Statement state = null;
+		PreparedStatement ps = null;
 		ResultSet result = null;
-		String query = "SELECT * FROM Pratica WHERE id = "+pratica.getId();
 		
 		connessione = DataBaseHelper.getConnection();
+		
+		Pratica pratica = null;
 		try {
-			state = connessione.createStatement();
-			result = state.executeQuery(query);
+			ps = connessione.prepareStatement("SELECT * FROM Pratica WHERE id = ?");
+			ps.setInt(1, idPratica);
+			result = ps.executeQuery();
 		
 			if (result.isBeforeFirst()) {
 				result.first();
 				
 				// cliente obbligatorio
-				pratica.setCliente(new Cliente(result.getInt("cliente")));
+				Cliente cliente = ClienteDao.getCliente(result.getInt("cliente"));
 				
 				// imponibile obbligatorio
 				// TODO: ATTENZIONE!! aliquota al 22% e importo non ivato HARD CODED!
 				Importo imponibile = new Importo(result.getBigDecimal("imponibile"), new Aliquota(22), false);
-				pratica.setImponibile(imponibile);
-				
+								
 				// spese obbligatorie
-				pratica.setSpese(new Euro(result.getBigDecimal("spese")));
+				Euro spese = new Euro(result.getBigDecimal("spese"));
 				
 				// descrizione obbligatoria
-				pratica.setDescrizione(result.getString("descrizione"));
+				String descrizione = result.getString("descrizione");
 				
 				// data pagamento obbligatoria
-				pratica.setDataPagamento(new Data(result.getString("dataPagamento")));
+				Data data = new Data(result.getString("dataPagamento"));
+				
+				pratica = new Pratica(cliente, imponibile, spese, descrizione, data);
 				
 			} else {
 				// nessuna pratica selezionata!!
-				throw new Exception("Non esiste la pratica con id: "+pratica.getId()+".");
+				throw new Exception("Non esiste la pratica con id: "+idPratica+".");
 			}
 		
 			result.close();
-			state.close();
+			ps.close();
 			connessione.close();
 			
 		} catch(SQLException erroreSQL) {
-			DataBaseHelper.manageError(erroreSQL, query);
+			DataBaseHelper.manageError(erroreSQL);
 		}
+		
+		return pratica;
 	}
 	
 	
@@ -92,17 +98,18 @@ public class PraticaDao {
 	 * @return
 	 */
 	public static ArrayList<Pratica> selectPraticheNonPagateByCliente(Cliente cliente) {
+		
 		Connection connessione = null;
-		Statement state = null;
+		PreparedStatement ps = null;
 		ResultSet result = null;
-		String query = "SELECT * FROM Pratica WHERE cliente = "+cliente.getId()+" AND pagata = 0";
 		
 		connessione = DataBaseHelper.getConnection();
 		
 		ArrayList<Pratica> pratiche = new ArrayList<Pratica>();
 		try {
-			state = connessione.createStatement();
-			result = state.executeQuery(query);
+			ps = connessione.prepareStatement("SELECT * FROM Pratica WHERE cliente = ? AND pagata = 0");
+			ps.setInt(1, cliente.getId());
+			result = ps.executeQuery();
 			
 			
 			if (result.isBeforeFirst()) {
@@ -123,11 +130,11 @@ public class PraticaDao {
 			}
 			
 			result.close();
-			state.close();
+			ps.close();
 			connessione.close();
 			
 		} catch(SQLException erroreSQL) {
-			DataBaseHelper.manageError(erroreSQL, query);
+			DataBaseHelper.manageError(erroreSQL);
 		}
 			
 		return pratiche;

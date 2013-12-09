@@ -2,13 +2,14 @@ package dao;
 
 
 import java.sql.Connection;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
 
 import model.Cliente;
-import model.soldi.Euro;
+import model.soldi.AccontoVirtuale;
 import util.DataBaseHelper;
 
 
@@ -35,47 +36,46 @@ public class ClienteDao {
 	 * @param id identificativo del cliente sul DB
 	 * @throws Exception se viene passato un id che non esiste nel database
 	 */
-	public static Cliente getCliente(int id) throws Exception {
+	public static Cliente getCliente(int idCliente) throws Exception {
 
-		Cliente cliente = new Cliente(id);
 		
 		Connection connessione = null;
-		Statement state = null;
+		PreparedStatement ps = null;
 		ResultSet result = null;
-		String query = "SELECT * FROM Cliente WHERE id = "+cliente.getId();
 		
 		connessione = DataBaseHelper.getConnection();
 		
+		Cliente cliente = null;
+		
 		try {
 		
-			state = connessione.createStatement();
-			result = state.executeQuery(query);
+			ps = connessione.prepareStatement("SELECT * FROM Cliente WHERE id = ?");
+			ps.setInt(1, idCliente);
+			result = ps.executeQuery();
 		
 			// recupero i dati
 			if (result.isBeforeFirst()) {
 				result.first();
 				
-				// nome
-				cliente.setNome(result.getString("nome"));
-				
-				// cognome
-				cliente.setCognome(result.getString("cognome"));
-				
+				// nome e cognome
+				cliente = new Cliente(result.getString("nome"), result.getString("cognome"));
+
 				// acconto virtuale
+				// acconto virtuale mai null ma sempre con un valore Euro positivo (>= 0.00 )
+				AccontoVirtuale acconto = new AccontoVirtuale();
 				if(result.getDouble("accontoVirtuale") != 0.0) {
-					cliente.setAccontoVirtuale(new Euro(result.getDouble("accontoVirtuale")));
-				}else{
-					// acconto virtuale mai null ma sempre con un valore Euro positivo (>= 0.00 )
-					cliente.setAccontoVirtuale(new Euro());
+					acconto = new AccontoVirtuale(result.getDouble("accontoVirtuale"), result.getBoolean("accontoVirtualeIVA"));
+
 				}
+				cliente.setAccontoVirtuale(acconto);
 				
 			} else {
 				// nessun cliente selezionato!!
-				throw new Exception("nessun cliente con id "+cliente.getId()+" è presente nel database");
+				throw new Exception("nessun cliente con id "+idCliente+" è presente nel database");
 			}
 			
 			result.close();
-			state.close();
+			ps.close();
 			connessione.close();
 			
 		} catch (SQLException e) {
@@ -113,21 +113,17 @@ public class ClienteDao {
 			if (result.isBeforeFirst()) {
 				while(result.next()) {
 				
-					Cliente cliente = new Cliente(result.getInt("id"));
-					
-					// nome
-					cliente.setNome(result.getString("nome"));
-					
-					// cognome
-					cliente.setCognome(result.getString("cognome"));
+					// nome e cognome
+					Cliente cliente = new Cliente(result.getString("nome"), result.getString("cognome"));
 					
 					// acconto virtuale
+					// acconto virtuale mai null ma sempre con un valore Euro positivo (>= 0.00 )
+					AccontoVirtuale acconto = new AccontoVirtuale();
 					if(result.getDouble("accontoVirtuale") != 0.0) {
-						cliente.setAccontoVirtuale(new Euro(result.getDouble("accontoVirtuale")));
-					}else{
-						// acconto virtuale mai null ma sempre con un valore Euro positivo (>= 0.00 )
-						cliente.setAccontoVirtuale(new Euro());
+						acconto = new AccontoVirtuale(result.getDouble("accontoVirtuale"), result.getBoolean("accontoVirtualeIVA"));
+
 					}
+					cliente.setAccontoVirtuale(acconto);
 					
 					clienti.add(cliente);
 				}

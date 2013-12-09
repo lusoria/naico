@@ -2,9 +2,8 @@ package model;
 
 
 import java.util.ArrayList;
-import java.util.Iterator;
 
-import model.soldi.Euro;
+import model.soldi.AccontoVirtuale;
 import dao.PraticaDao;
 
 
@@ -21,18 +20,7 @@ public class Cliente {
 	private String cognome;
 	private Email pec;
 	private PartitaIva partitaiva;
-	private Euro accontoVirtuale;
-	
-	
-	/**
-	 * Crea un Cliente <b>vuoto</b>, con solo il suo identificativo nel DB.<br>
-	 * Per avere un Cliente istanziato correttamente dal solo id, usare la classe DAO corrispondente.
-	 * @param id identificativo del cliente nel database
-	 */
-	public Cliente(int id) {
-		this.id = id;
-	}
-	
+	private AccontoVirtuale accontoVirtuale;
 	
 	
 	/**
@@ -44,7 +32,7 @@ public class Cliente {
 	public Cliente(String nome, String cognome) {
 		this.nome = nome;
 		this.cognome = cognome;
-		this.accontoVirtuale =  new Euro();
+		this.accontoVirtuale =  new AccontoVirtuale();
 	}
 	
 	
@@ -151,7 +139,7 @@ public class Cliente {
 	 * Per informazioni sull'acconto virtuale, vedere ??? TODO: aggiungere da qualche parte la documentazione dell'acconto virtuale
 	 * @return acconto virtuale (oggetto Euro) del cliente
 	 */
-	public Euro getAccontoVirtuale() {
+	public AccontoVirtuale getAccontoVirtuale() {
 		return this.accontoVirtuale;
 	}
 
@@ -161,7 +149,7 @@ public class Cliente {
 	 * Per informazioni sull'acconto virtuale, vedere ??? TODO: aggiungere da qualche parte la documentazione dell'acconto virtuale
 	 * @param accontoVirtuale oggetto Euro che rappresenta l'acconto virtuale del cliente
 	 */
-	public void setAccontoVirtuale(Euro accontoVirtuale) {
+	public void setAccontoVirtuale(AccontoVirtuale accontoVirtuale) {
 		this.accontoVirtuale = accontoVirtuale;
 	}
 
@@ -177,12 +165,6 @@ public class Cliente {
 	
 	
 	
-	/**
-	 * Aggiorna il record sul DB corrispondente al Cliente in oggetto.
-	 */
-	public void update() {
-		// TODO: implementare
-	}
 	
 	
 	// TODO: documentare
@@ -206,7 +188,7 @@ public class Cliente {
 	 * <p>Questo metodo setta come pagate sul DB le eventuali pratiche che il pagamento riesce a coprire.</p>
 	 * <p>Anche l'acconto virtuale del cliente può venir aggiornato sul DB</p>  
 	 * @param pagamento oggetto Euro rappresentante la cifra che il cliente ci dà
-	 */
+
 	public void pagamento(Euro pagamento) {
 		
 		CodaPratiche coda = null;
@@ -247,6 +229,7 @@ public class Cliente {
 			System.out.println("al cliente "+this+" restano "+this.getAccontoVirtuale());
 		}
 	}
+	*/
 
 
 }
