@@ -75,11 +75,21 @@ public class Pratica implements Comparable<Pratica>{
 	
 	
 	/**
+	 * Imposta l'identificativo della pratica sul database.
+	 * Teoricamente questo metodo viene usato solo dalle ClassiDao che costruiscono la Pratica dal DB.
+	 * @param id identificativo della pratica sul db
+	 */
+	public void setId(int id) {
+		this.id = id;
+	}
+	
+	
+	/**
 	 * Restituisce la descrizione (ovvero il titolo) della Pratica (es.: "PEC: ATTIVAZIONE E COMUNICAZIONE")
 	 * @return descrizione (stringa tutta maiuscola)
 	 */
 	public String getDescrizione() {
-		return descrizione.toUpperCase();
+		return descrizione;
 	}
 	
 	
@@ -201,10 +211,9 @@ public class Pratica implements Comparable<Pratica>{
 
 		// TODO: tizio è sincronizzato col db?
 		
-		System.out.println("-----");
-		System.out.println("Pratica ["+this.getId()+"] di "+this.imponibile+" con "+this.getSpese()+" di spese: "+this.getDescrizione());
-		System.out.println("per "+tizio);
-		System.out.println("pagamento al "+this.getDataPagamento());
+		System.out.print("Pratica ["+this.getId()+"] di "+this.imponibile+" con "+this.getSpese()+" di spese: "+this.getDescrizione().toUpperCase());
+		System.out.print(" per "+tizio);
+		System.out.println(" pagamento al "+this.getDataPagamento());
 	}
 	
 

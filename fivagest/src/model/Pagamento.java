@@ -136,8 +136,8 @@ public class Pagamento {
 
 	@Override
 	public String toString() {
-		return "Pagamento [id=" + id + ", cliente=" + cliente + ", data="
-				+ data + ", euro=" + pagamento + "]";
+		return "Pagamento [del cliente=" + cliente + ", in data="
+				+ data + ", di euro=" + pagamento + " che "+(this.pagaAncheIva() ? "paga" : "non paga")+" l'IVA";
 	}
 	
 	

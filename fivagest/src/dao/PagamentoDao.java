@@ -6,10 +6,12 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Iterator;
 
 import model.Cliente;
 import model.Pagamento;
 import model.Pratica;
+import model.soldi.AccontoVirtuale;
 import model.soldi.Euro;
 import util.Data;
 import util.DataBaseHelper;
@@ -82,16 +84,105 @@ public class PagamentoDao {
 	}
 	
 	
-	
-	public static void effettuaPagamento(Cliente cliente, Pagamento pagamento) {
+	/**
+	 * 
+	 * @param pagamento
+	 */
+	public static void effettuaPagamento(Pagamento pagamento) {
 		if(!pagamento.getPagamento().isZero()) {
+			
+			Cliente cliente = pagamento.getCliente();
+			
 			// raccolgo le pratiche non pagate del cliente
 			ArrayList<Pratica> praticheNonPagate = PraticaDao.selectPraticheNonPagateByCliente(cliente);
 			
 			// ordino le pratiche non pagate secondo un criterio di urgenza
 			Collections.sort(praticheNonPagate, new Pratica.DataPagamentoComparator());
 			
-			// sommo questo pagamento con l'eventuale acconto virtuale del cliente
+			// debug
+			System.out.println("--- situazione iniziale ---");
+			System.out.print("il cliente: "+cliente+" con acconto virtuale di "+cliente.getAccontoVirtuale()+" che ");
+			System.out.print(cliente.getAccontoVirtuale().getPagaIVA() ? "paga": "non paga");
+			System.out.println(" l'IVA.");
+			
+			System.out.println("ha effettuato il "+pagamento);
+			
+			System.out.println("Ecco le sue pratiche non pagate ordinate");
+			for(Pratica pratica : praticheNonPagate) {
+				pratica.printPratica();
+			}
+			System.out.println("--- inizio pagamento ---");
+			
+			/**
+			 * L'acconto virtuale precedente e il pagamento corrente possono essere ognuno di due tipi:
+			 * accIVA/acc = Acconto Virtuale precedente che ha pagato delle pratiche IVATE o non IVATE
+			 * pagIVA/pag = Pagamento corrente andrà a pagare rispettivamente pratiche con IVA o senza IVA
+			 * Possono esserci quindi quattro casi distinti da prendere in esame:
+			 * 1- accIVA + pagIVA: si possono tranquillamente sommare perchè andranno a pagare pratiche IVATE
+			 * 2- accIVA + pag: Viene rilasciata una Nota di Accredito in modo da trasformare l'accIVA in acc
+			 * 3- acc + pagIVA: acc viene trasformato in accIVA e andrà a pagare insieme a pagIVA pratiche IVATE
+			 * 4- acc + pag: si sommano tranquillamente e andranno a pagare pratiche senza IVA
+			 * 
+			 * Il pagamento corrente decide quindi se le pratiche vengono calcolate con o senza IVA.
+			 * In tutti i casi pagamento corrente e acconto virtuale vengono sommati.
+			 * Caso particolare (2) viene generata una Nota di Accredito.
+			 */
+			
+
+			Euro pagamentoTot = Euro.somma(cliente.getAccontoVirtuale(), pagamento.getPagamento());
+			boolean praticheIVATE = pagamento.pagaAncheIva();
+			
+			if(cliente.getAccontoVirtuale().getPagaIVA() && !pagamento.pagaAncheIva()) {
+				// caso 2.
+				// TODO: implementare!
+				System.out.println("Nota di Accredito di "+cliente.getAccontoVirtuale());
+			}
+			
+			// prima pratica fuori dal while processata sempre
+			Iterator<Pratica> iterator = praticheNonPagate.iterator();
+			Pratica pratica = (Pratica) iterator.next();
+			
+			
+			// calcolo il costo totale della pratica: imponibile + sua eventuale IVA + spese esenti IVA
+			if(praticheIVATE) {pratica.getImponibile().applicaIva(); }
+			Euro costoTotPratica = Euro.somma(pratica.getSpese(), pratica.getImponibile());
+			// DEBUG: riassuntino
+			System.out.println("acconto: "+pagamentoTot+" costo pratica "+pratica.getDescrizione()+": "+costoTotPratica);
+			
+			while(pagamentoTot.compareTo(costoTotPratica) >= 0) {
+
+				// il pagamento riesce a coprire il costo complessivo della pratica
+				System.out.println("pratica "+pratica.getDescrizione()+" pagata!");
+				pratica.setPagata();
+				pagamentoTot.meno(costoTotPratica);
+				
+				// aggiorno la pratica sul db (è stata pagata quindi sicuramente pagata)
+				PraticaDao.update(pratica);
+
+				// prossima pratica
+				pratica = (Pratica) iterator.next();
+				
+				// calcolo il costo totale della pratica: imponibile + sua eventuale IVA + spese esenti IVA
+				if(praticheIVATE) {pratica.getImponibile().applicaIva(); }
+				costoTotPratica = Euro.somma(pratica.getSpese(), pratica.getImponibile());
+				// DEBUG: riassuntino
+				System.out.println("acconto: "+pagamentoTot+" costo pratica "+pratica.getDescrizione()+": "+costoTotPratica);
+				
+			}
+			
+			// ciò che è avanzato è il nuovo Acconto Virtuale del cliente
+			cliente.setAccontoVirtuale(new AccontoVirtuale(pagamentoTot.getValore(), praticheIVATE));
+			
+			// aggiorno il cliente (molto probabilmente è cambiato l'acconto virtuale
+			try {
+				ClienteDao.update(cliente);
+			} catch (Exception e) {
+				System.err.println("Errore nell'aggiornamento del cliente "+cliente+"durante il pagamento");
+				e.printStackTrace();
+			}
+			
+			// debug
+			System.out.println("FINE pagamento: al cliente resta un acconto virtuale di "+cliente.getAccontoVirtuale());
 		}		
 	}
 	

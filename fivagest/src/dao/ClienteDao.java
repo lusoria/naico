@@ -30,7 +30,7 @@ public class ClienteDao {
 	
 	
 	/**
-	 * Interroga il database e cerca di riempire un oggetto Cliente con più dati possibili.<br>
+	 * [CRUD: read] Interroga il database e cerca di riempire un oggetto Cliente con più dati possibili.<br>
 	 * Alcuni campi saranno obbligatori e quindi sicuramente presenti nel database, mentre altri facoltativi.<br>
 	 * In quest'ultimo caso, i relativi attributi verranno settati sul loro valore di default o lasciati vuoti.
 	 * @param id identificativo del cliente sul DB
@@ -57,8 +57,13 @@ public class ClienteDao {
 			if (result.isBeforeFirst()) {
 				result.first();
 				
+
+				
 				// nome e cognome
 				cliente = new Cliente(result.getString("nome"), result.getString("cognome"));
+				
+				// id
+				cliente.setId(idCliente);
 
 				// acconto virtuale
 				// acconto virtuale mai null ma sempre con un valore Euro positivo (>= 0.00 )
@@ -87,7 +92,39 @@ public class ClienteDao {
 	}
 
 
-
+	/**
+	 * [CRUD: update] Aggiorna sul database TUTTI gli attributi del Cliente passato come parametro.
+	 * @param cliente Cliente da aggiornare
+	 */
+	public static void update(Cliente cliente) {
+		
+		Connection connessione = null;
+		PreparedStatement ps = null;
+		connessione = DataBaseHelper.getConnection();
+		
+		try {
+			
+			ps = connessione.prepareStatement("UPDATE cliente SET cognome=?, nome=?, accontoVirtuale=?, accontoVirtualeIVA=? WHERE id=?");
+			ps.setString(1, cliente.getCognome());
+			ps.setString(2, cliente.getNome());
+			// TODO: codice fiscale!!
+			ps.setDouble(3, cliente.getAccontoVirtuale().getValore().doubleValue());
+			ps.setBoolean(4, cliente.getAccontoVirtuale().getPagaIVA());
+			ps.setInt(5, cliente.getId());
+			
+			ps.executeUpdate();
+		
+			ps.close();
+			connessione.close();
+			
+		} catch (SQLException e) {
+			System.err.println("Errore durante l'aggiornamento del cliente "+cliente);
+			DataBaseHelper.manageError(e);
+		}
+		
+	}
+	
+	
 	/**
 	 * Restituisce la lista di tutti i clienti presenti nel Database, ordinati alfabeticamente
 	 * per cognome.

@@ -46,13 +46,32 @@ public class Cliente {
 	
 	
 	/**
+	 * Imposta l'identificativo del cliente sul DB.
+	 * Tipicamente questo metodo è richiamato solamente dalle classi DAO
+	 * @param id identificativo del cliente sul DB
+	 */
+	public void setId(int id) {
+		this.id = id;
+	}
+	
+	
+	/**
 	 * Restituisce il nome completo (nel formato "Cognome, Nome") del Cliente
 	 * @return stringa col nome completo
 	 */
-	public String getNome() {
+	public String getNomeCompleto() {
 		return this.cognome+", "+this.nome;
 	}
 	
+	
+	/**
+	 * Restituisce il nome di battesimo del Cliente.
+	 * Per avere il nome completo (con cognome), usare getNomeCompleto() .
+	 * @return nome del cliente
+	 */
+	public String getNome() {
+		return this.nome;
+	}
 	
 	/**
 	 * Imposta il nome del Cliente (nome (anche più d'uno) di battesimo, non cognomi!)
@@ -60,6 +79,15 @@ public class Cliente {
 	 */
 	public void setNome(String nome) {
 		this.nome = nome;
+	}
+	
+	
+	/**
+	 * Restituisce il cognome del cliente.
+	 * @return cognome del cliente
+	 */
+	public String getCognome() {
+		return this.cognome;
 	}
 
 	
@@ -160,7 +188,7 @@ public class Cliente {
 	 * @return notazione in stringa dell'oggetto corrente
 	 */
 	public String toString() {
-		return this.getNome()+" ["+Integer.toString(this.id)+"]";		
+		return this.getNomeCompleto()+" ["+Integer.toString(this.id)+"]";		
 	}
 	
 	

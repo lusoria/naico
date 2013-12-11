@@ -62,7 +62,11 @@ public class PraticaDao {
 				// data pagamento obbligatoria
 				Data data = new Data(result.getString("dataPagamento"));
 				
+				// creo la pratica ora che ho raccolto i parametri obbligatori
 				pratica = new Pratica(cliente, imponibile, spese, descrizione, data);
+				
+				// parametri non obbligatori
+				pratica.setId(idPratica);
 				
 			} else {
 				// nessuna pratica selezionata!!
@@ -78,6 +82,40 @@ public class PraticaDao {
 		}
 		
 		return pratica;
+	}
+	
+	
+	/**
+	 * [CRUD: update] Aggiorna sul database TUTTI gli attributi della Pratica passata come parametro.
+	 * @param pratica Pratica da aggiornare
+	 */
+	public static void update(Pratica pratica) {
+		
+		Connection connessione = null;
+		PreparedStatement ps = null;
+		connessione = DataBaseHelper.getConnection();
+		
+		try {
+			
+			ps = connessione.prepareStatement("UPDATE pratica SET cliente=?, imponibile=?, spese=?, descrizione=?, pagata=?, dataPagamento=? WHERE id=?");
+			ps.setInt(1, pratica.getCliente().getId());
+			ps.setDouble(2, pratica.getImponibile().getValore().doubleValue());
+			ps.setDouble(3, pratica.getSpese().getValore().doubleValue());
+			ps.setString(4, pratica.getDescrizione());
+			ps.setBoolean(5, pratica.isPagata());
+			ps.setDate(6, new java.sql.Date(pratica.getDataPagamento().getTime().getTime()));
+			ps.setInt(7, pratica.getId());
+			
+			ps.executeUpdate();
+		
+			ps.close();
+			connessione.close();
+			
+		} catch (SQLException e) {
+			System.err.println("Errore durante l'aggiornamento della pratica "+pratica.getDescrizione());
+			DataBaseHelper.manageError(e);
+		}
+		
 	}
 	
 	
