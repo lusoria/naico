@@ -1,20 +1,17 @@
 package test;
 
-import model.Cliente;
-import model.Pagamento;
-import model.soldi.Euro;
-import util.Data;
-import dao.ClienteDao;
-import dao.PagamentoDao;
-
-
-
+import org.pmw.tinylog.Logger;
 
 public class Test {
+	
+	
 
 	public static void main(String Args[]) {
-		System.out.println("inizio test");
+		Logger.info("inizio test");
+		Logger.info("fine test");
+		System.exit(0);
 		
+		/*
 		Cliente cliente = null;
 		try {
 			cliente = ClienteDao.getCliente(1);
@@ -24,17 +21,14 @@ public class Test {
 		
 		System.out.println(cliente);
 		
-		System.out.println("fine test");
-		System.exit(0);
-		
 		Pagamento pagamento = new Pagamento(cliente, new Data(), new Euro("100.00"), true);
 		PagamentoDao.effettuaPagamento(pagamento);
 		
 		Pagamento pagamento2 = new Pagamento(cliente, new Data(), new Euro("100.00"), false);
 		PagamentoDao.effettuaPagamento(pagamento2);
 		
-		
 		System.out.println("fine test");
 		System.exit(0);
+		*/
 	}
 }

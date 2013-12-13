@@ -8,6 +8,8 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Iterator;
 
+import org.pmw.tinylog.Logger;
+
 import model.Cliente;
 import model.Pagamento;
 import model.Pratica;
@@ -100,18 +102,18 @@ public class PagamentoDao {
 			Collections.sort(praticheNonPagate, new Pratica.DataPagamentoComparator());
 			
 			// debug
-			System.out.println("--- situazione iniziale ---");
-			System.out.print("il cliente: "+cliente+" con acconto virtuale di "+cliente.getAccontoVirtuale()+" che ");
-			System.out.print(cliente.getAccontoVirtuale().getPagaIVA() ? "paga": "non paga");
-			System.out.println(" l'IVA.");
+			Logger.info("--- situazione iniziale ---");
+			Logger.info("il cliente: "+cliente+" con acconto virtuale di "+cliente.getAccontoVirtuale()+" che ");
+			Logger.info(cliente.getAccontoVirtuale().getPagaIVA() ? "paga": "non paga");
+			Logger.info(" l'IVA.");
 			
-			System.out.println("ha effettuato il "+pagamento);
+			Logger.info("ha effettuato il "+pagamento);
 			
-			System.out.println("Ecco le sue pratiche non pagate ordinate");
+			Logger.info("Ecco le sue pratiche non pagate ordinate");
 			for(Pratica pratica : praticheNonPagate) {
 				pratica.printPratica();
 			}
-			System.out.println("--- inizio pagamento ---");
+			Logger.info("--- inizio pagamento ---");
 			
 			/**
 			 * L'acconto virtuale precedente e il pagamento corrente possono essere ognuno di due tipi:
@@ -135,7 +137,7 @@ public class PagamentoDao {
 			if(cliente.getAccontoVirtuale().getPagaIVA() && !pagamento.pagaAncheIva()) {
 				// caso 2.
 				// TODO: implementare!
-				System.out.println("Nota di Accredito di "+cliente.getAccontoVirtuale());
+				Logger.info("Nota di Accredito di "+cliente.getAccontoVirtuale());
 			}
 			
 			// prima pratica fuori dal while processata sempre
@@ -146,13 +148,12 @@ public class PagamentoDao {
 			// calcolo il costo totale della pratica: imponibile + sua eventuale IVA + spese esenti IVA
 			if(praticheIVATE) {pratica.getImponibile().applicaIva(); }
 			Euro costoTotPratica = Euro.somma(pratica.getSpese(), pratica.getImponibile());
-			// DEBUG: riassuntino
-			System.out.println("acconto: "+pagamentoTot+" costo pratica "+pratica.getDescrizione()+": "+costoTotPratica);
+			Logger.info("acconto: "+pagamentoTot+" costo pratica "+pratica.getDescrizione()+": "+costoTotPratica);
 			
 			while(pagamentoTot.compareTo(costoTotPratica) >= 0) {
 
 				// il pagamento riesce a coprire il costo complessivo della pratica
-				System.out.println("pratica "+pratica.getDescrizione()+" pagata!");
+				Logger.info("pratica "+pratica.getDescrizione()+" pagata!");
 				pratica.setPagata();
 				pagamentoTot.meno(costoTotPratica);
 				
@@ -165,8 +166,7 @@ public class PagamentoDao {
 				// calcolo il costo totale della pratica: imponibile + sua eventuale IVA + spese esenti IVA
 				if(praticheIVATE) {pratica.getImponibile().applicaIva(); }
 				costoTotPratica = Euro.somma(pratica.getSpese(), pratica.getImponibile());
-				// DEBUG: riassuntino
-				System.out.println("acconto: "+pagamentoTot+" costo pratica "+pratica.getDescrizione()+": "+costoTotPratica);
+				Logger.info("acconto: "+pagamentoTot+" costo pratica "+pratica.getDescrizione()+": "+costoTotPratica);
 				
 			}
 			

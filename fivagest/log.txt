@@ -1,0 +1,2 @@
+INFO: test.Test.main()	inizio test
+INFO: test.Test.main()	fine test
